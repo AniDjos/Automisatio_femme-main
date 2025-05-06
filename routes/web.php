@@ -7,6 +7,7 @@ use App\Http\Controllers\MembreController;
 use App\Http\Controllers\QuartierController;
 use App\Http\Controllers\CpsController;
 use App\Http\Controllers\AgrementController;
+use App\Http\Controllers\AcceuilController;
 use App\Http\Controllers\FiliereController;
 use App\Http\Controller\EquipementController;
 use App\Http\Controllers\AppuiController;
@@ -14,9 +15,12 @@ use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\CommuneController;
 use App\Http\Controllers\ArrondissementController;
 use App\Http\Controllers\UtilisateurController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Commune;
 use App\Models\Arrondissement;
 use App\Models\Quartier;
+use App\Http\Controllers\SiteSettingsController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
@@ -30,21 +34,21 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\AcceuilController::class,'Acceuil'])->name('App_acceuil');
+Route::get('/', [AcceuilController::class,'Acceuil'])->name('App_acceuil');
 
-Route::get('/contact', [\App\Http\Controllers\AcceuilController::class,'Contact'])->name('App_contact');
+Route::get('/contact', [AcceuilController::class,'Contact'])->name('App_contact');
 
-Route::get('/prestation', [\App\Http\Controllers\AcceuilController::class,'Prestation'])->name('App_prestation');
+Route::get('/prestation', [AcceuilController::class,'Prestation'])->name('App_prestation');
 
-Route::get('/groupement', [\App\Http\Controllers\GroupementController::class,'indexe'])->name('App_groupement');
+Route::get('/groupement', [GroupementController::class,'indexe'])->name('App_groupement');
 
-Route::get('/groupement/{id}', [\App\Http\Controllers\GroupementController::class,'shows'])->name('App_groupement_shows');
+Route::get('/groupement/{id}', [GroupementController::class,'shows'])->name('App_groupement_shows');
 
 /**
  * * Routes pour la gestion de l'authentification
  */
 
-Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard')->middleware('auth') ;
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::get('/Pre_dashboard', [DashboardController::class, 'pre'])->name('acceuilDashboard') ;
 
@@ -277,28 +281,45 @@ Route::get('/api/quartiers/{arrondissement_id}', function ($arrondissement_id) {
 /**
  * Routes pour la gestion des utilisateurs
  */
-Route::post('/utilisateurs', [\App\Http\Controllers\UtilisateurController::class, 'store'])->name('utilisateurs.store');
+Route::post('/utilisateurs', [UtilisateurController::class, 'store'])->name('utilisateurs.store');
 
-Route::get('/utilisateurs/nouveau', [\App\Http\Controllers\UtilisateurController::class, 'create'])->name('utilisateurs.create')->middleware('auth');
+Route::get('/utilisateurs/nouveau', [UtilisateurController::class, 'create'])->name('utilisateurs.create')->middleware('auth');
 
 Route::get('/utilisateurs', [App\Http\Controllers\UtilisateurController::class, 'index'])->name('utilisateurs.index')->middleware('auth');
 
-Route::put('/utilisateurs/{id}', [\App\Http\Controllers\UtilisateurController::class, 'update'])->name('utilisateurs.update');
+Route::put('/utilisateurs/{id}', [UtilisateurController::class, 'update'])->name('utilisateurs.update');
 
-Route::get('/utilisateurs/{id}/edit', [\App\Http\Controllers\UtilisateurController::class, 'edit'])->name('utilisateurs.edit')->middleware('auth');
+Route::get('/utilisateurs/{id}/edit', [UtilisateurController::class, 'edit'])->name('utilisateurs.edit')->middleware('auth');
 
-Route::get('/utilisateurs/{id}', [\App\Http\Controllers\UtilisateurController::class, 'show'])->name('utilisateurs.show')->middleware('auth');
+Route::get('/utilisateurs/{id}', [UtilisateurController::class, 'show'])->name('utilisateurs.show')->middleware('auth');
 
-Route::delete('/utilisateurs/{id}', [\App\Http\Controllers\UtilisateurController::class, 'destroy'])->name('utilisateurs.destroy');
+Route::delete('/utilisateurs/{id}', [UtilisateurController::class, 'destroy'])->name('utilisateurs.destroy');
 
-Route::put('/utilisateurs/{id}/toggle-status', [\App\Http\Controllers\UtilisateurController::class, 'toggleStatus'])->name('utilisateurs.toggleStatus');
+Route::put('/utilisateurs/{id}/toggle-status', [UtilisateurController::class, 'toggleStatus'])->name('utilisateurs.toggleStatus');
 
-// Route::get('/connexion', [\App\Http\Controllers\UtilisateurController::class, 'created'])->name('utilisateurs.login');
+// Route::get('/connexion', [UtilisateurController::class, 'created'])->name('utilisateurs.login');
 
-// Route::post('/login', [\App\Http\Controllers\UtilisateurController::class, 'authenticate'])->name('utilisateurs.authenticate');
+// Route::post('/login', [UtilisateurController::class, 'authenticate'])->name('utilisateurs.authenticate');
 
-Route::get('/logout',[\App\Http\Controllers\UtilisateurController::class, 'logout'])->name('logout');
+Route::get('/logout',[UtilisateurController::class, 'logout'])->name('logout');
 
+Route::middleware('auth')->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
+});
+
+
+    Route::get('/settings', [SiteSettingsController::class, 'index'])->name('admin.settings');
+
+    Route::put('/settings', [SiteSettingsController::class, 'update'])->name('admin.settings.update');
+
+    Route::post('/settings/upload-logo', [SiteSettingsController::class, 'uploadLogo'])->name('admin.settings.upload.logo');
+    
+    Route::post('/settings/upload-favicon', [SiteSettingsController::class, 'uploadFavicon'])->name('admin.settings.upload.favicon');
 
 
 

@@ -60,4 +60,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Structure::class, 'users_id');
     }
+
+    public function isAdmin()
+    {
+        // Vérifie si le rôle de l'utilisateur est 'admin'
+        return strtolower($this->role) === 'admin';
+    }
 }

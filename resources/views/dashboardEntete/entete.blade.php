@@ -1352,7 +1352,7 @@
                         <div class="profile-menu" id="profile-menu">
                             <button class="profile-button" onclick="toggleProfileMenu()">
                                 <div class="profile-avatar">
-                                    <img src="https://randomuser.me/api/portraits/men/43.jpg" alt="Profile">
+                                    <img src="{{ asset('images/' . Auth::user()->profile_photo) }}" alt="Profile">
                                 </div>
                                 <div class="profile-info">
                                     <p class="profile-name">{{ Auth::user()->name }}</p>
@@ -1371,14 +1371,25 @@
                                 </div>
                                 <ul class="dropdown-menu">
                                     <li class="dropdown-item">
-                                        <a href="#" class="dropdown-link">
+                                        <a href="{{ route('profile') }}" class="dropdown-link">
                                             <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                 stroke-linejoin="round">
                                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                                 <circle cx="12" cy="7" r="4"></circle>
                                             </svg>
-                                            Mon profil
+                                            Mon profile
+                                        </a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="{{ route('admin.settings') }}" class="dropdown-link">
+                                            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="12" cy="7" r="4"></circle>
+                                            </svg>
+                                            Paramètres
                                         </a>
                                     </li>
                                     <li class="dropdown-item dropdown-separator"></li>

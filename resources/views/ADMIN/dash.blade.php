@@ -462,7 +462,7 @@ Chart.defaults.plugins.tooltip.cornerRadius = 8;
 Chart.defaults.plugins.legend.labels.usePointStyle = true;
 
 // Graphique 1 : Groupements par Département
-@isset($departements, $groupementsParDepartement)
+@isset($departements , $groupementsParDepartement)
 const ctx1 = document.getElementById('groupementsParDepartement')?.getContext('2d');
 if (ctx1) {
     new Chart(ctx1, {
