@@ -17,7 +17,7 @@ class QuartierController extends Controller
         $user = Auth::user();
 
         // Vérifiez si l'utilisateur est autorisé
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
 

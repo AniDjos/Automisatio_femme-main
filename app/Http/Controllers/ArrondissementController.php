@@ -15,7 +15,7 @@ class ArrondissementController extends Controller
                         $user = Auth::user();
     
                         // Vérifier le rôle de l'utilisateur
-                        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+                        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
                             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
                         }
         $communes = Commune::all(); // Récupère toutes les communes

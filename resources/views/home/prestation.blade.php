@@ -128,6 +128,132 @@
             
         </div>
     </section>
+<style>
 
+
+.accueil{
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+
+.accueil .acc-img {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.accueil .acc-img img {
+    width: 100%;
+    width: 100vw; 
+    height: auto;
+    object-fit: cover; 
+    display: block;
+}
+
+
+.prestation{
+    position: relative;
+    width: 100%;
+    padding:  5% 10% 10% 10%;
+}
+
+
+.prestation .femme6{
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    top: -12%;
+    left: -8%;
+    background: #b2ae2e;
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.prestation .femme7{
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    bottom: -28%;
+    background: #b2ae2e;
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.prestation-header{
+    padding: 20px 12%;
+}
+
+.prestation-header h2{
+    font-size: 25px;
+    line-height: 1.2;
+}
+
+.accordion{
+    margin: 60px auto;
+    width: 100%;
+    max-width: 750px;
+}
+
+.accordion li{
+    list-style: none;
+    width: 100%;
+    padding: 5px;
+}
+
+.accordion li label{
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    background: #303030;
+    color: #eaeaea;
+    margin-bottom: 2px ;
+    cursor: pointer;
+    position: relative;
+}
+
+.accordion li label::after{
+    content: '+'; 
+    font-size: 34px ; 
+    position: absolute;
+    right: 20px;
+    transition: transform 0.5s;
+}
+
+input[type="radio"]{
+    display: none;
+}
+
+.accordion .content{
+    background: #303030;
+    color: #eaeaea;
+    text-align: left;
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s , padding 0.5s;
+}
+
+.accordion input[type="radio"]:checked + label + .content{
+    max-height: 890px;
+    padding: 30px 20px;
+}
+
+.accordion input[type="radio"]:checked + label::after{
+    transform: rotate(135deg);
+}
+
+   .search-icon {
+    font-size: 30px;
+    cursor: pointer;
+    color: #003366;
+}
+
+</style>
 
 @endsection()

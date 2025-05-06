@@ -25,7 +25,7 @@
                 <a href="{{ route('utilisateurs.index', ['filter' => 'activé']) }}">Activés</a>
                 <a href="{{ route('utilisateurs.index', ['filter' => 'désactivé']) }}">Désactivés</a>
                 <a href="{{ route('utilisateurs.index', ['role' => 'admin']) }}">Admins</a>
-                <a href="{{ route('utilisateurs.index', ['role' => 'Gestionnaire de la plateforme']) }}">Gestionnaire</a>
+                <a href="{{ route('utilisateurs.index', ['role' => 'Gestionnaire du ministere']) }}">Gestionnaire</a>
                 <a href="{{ route('utilisateurs.index', ['role' => 'modérateur']) }}">Modérateurs</a>
             </div>
         </div>

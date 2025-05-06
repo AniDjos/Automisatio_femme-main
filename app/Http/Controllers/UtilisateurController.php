@@ -23,13 +23,16 @@ class UtilisateurController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        $name = $validatedData['nom'] .'' . $validatedData['prenom'];
+
         User::create([
             'nom' => $validatedData['nom'],
             'prenom' => $validatedData['prenom'],
             'email' => $validatedData['email'],
+            'name'=> $name,
             'password' => Hash::make($validatedData['password']),
             'role' => $validatedData['role'],
-            'statut' => false, 
+            'statut' => false,
         ]);
 
 
@@ -41,14 +44,14 @@ class UtilisateurController extends Controller
     {
         // Récupérer l'utilisateur connecté
         $user = Auth::user();
-    
+
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
             return redirect()->route('dashboard')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
-    
+
         $query = User::query();
-    
+
         // Filtrer par statut
         if ($request->has('filter')) {
             if ($request->filter === 'activé') {
@@ -57,40 +60,40 @@ class UtilisateurController extends Controller
                 $query->where('statut', false);
             }
         }
-    
+
         // Filtrer par rôle
         if ($request->has('role')) {
             $query->where('role', $request->role);
         }
-    
+
         // Recherche par nom ou prénom
         $search = $request->input('search');
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('users.nom', 'like', "%$search%")
-                  ->orWhere('users.prenom', 'like', "%$search%");
+                    ->orWhere('users.prenom', 'like', "%$search%");
             });
         }
-    
+
         // Trier les résultats dans l'ordre décroissant par ID
         $query->orderBy('id', 'desc');
-    
+
         // Pagination
         $utilisateurs = $query->paginate(6);
-    
+
         // Retourner la vue avec les utilisateurs
         return view('utilisateurs.index', compact('utilisateurs'));
     }
 
     public function create()
     {
-                        // Récupérer l'utilisateur connecté
-                        $user = Auth::user();
-    
-                        // Vérifier le rôle de l'utilisateur
-                        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
-                            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
-                        }
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+
+        // Vérifier le rôle de l'utilisateur
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+        }
         return view('utilisateurs.create');
     }
 
@@ -102,9 +105,9 @@ class UtilisateurController extends Controller
             'prenom' => 'required|string|max:50',
             'email' => 'required|email|max:100|unique:users,email,' . $id . ',id',
             'role' => 'required|string|max:255',
-            'password' => 'nullable|string|min:8|confirmed',
-            'statut' => 'required|boolean',
+            'mdp' => 'nullable|string|min:8|confirmed',
         ]);
+
 
         // Vérification de l'utilisateur connecté
         if (!Auth::user()->can('update', User::class)) {
@@ -117,8 +120,7 @@ class UtilisateurController extends Controller
             'prenom' => $validatedData['prenom'],
             'email' => $validatedData['email'],
             'role' => $validatedData['role'],
-            'password' => $validatedData['password'] ? Hash::make($validatedData['password']) : DB::raw('password'),
-            'statut' => $validatedData['statut'],
+            'password' => $validatedData['mdp'] ? Hash::make($validatedData['mdp']) : DB::raw('mdp'),
             'updated_at' => now(),
         ]);
 
@@ -168,13 +170,14 @@ class UtilisateurController extends Controller
 
     public function toggleStatus($id)
     {
-        // Vérification de l'utilisateur connecté
-        if (!Auth::user()->can('update', User::class)) {
+        // Vérification des permissions
+        $user = Auth::user();
+        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
             return redirect()->route('utilisateurs.index')->with('error', 'Action non autorisée.');
         }
 
-        // Récupérer l'utilisateur
-        $utilisateur = DB::table('users')->where('id', $id)->first();
+        // Récupérer l'utilisateur cible
+        $utilisateur = User::find($id);
 
         if (!$utilisateur) {
             return redirect()->route('utilisateurs.index')->with('error', 'Utilisateur introuvable.');
@@ -183,21 +186,22 @@ class UtilisateurController extends Controller
         // Basculer le statut
         $nouveauStatut = !$utilisateur->statut;
 
-        DB::table('users')->where('id', $id)->update([
-            'statut' => $nouveauStatut,
-            'updated_at' => now(),
-        ]);
+        try {
+            $utilisateur->update([
+                'statut' => $nouveauStatut,
+            ]);
 
-        $message = $nouveauStatut ? 'Utilisateur activé avec succès.' : 'Utilisateur désactivé avec succès.';
-        return redirect()->route('utilisateurs.index')->with('success', $message);
+            $message = $nouveauStatut ? 'Utilisateur activé avec succès.' : 'Utilisateur désactivé avec succès.';
+            return redirect()->route('utilisateurs.index')->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->route('utilisateurs.index')->with('error', 'Une erreur est survenue lors de la mise à jour du statut.');
+        }
     }
-
-
 
     public function authenticate(Request $request)
     {
         Log::info('Tentative de connexion', ['email' => $request->email]);
-    
+
         try {
             // Validation des données avec messages personnalisés
             $credentials = $request->validate([
@@ -209,10 +213,10 @@ class UtilisateurController extends Controller
                 'mdp.required' => 'Le mot de passe est obligatoire.',
                 'mdp.min' => 'Le mot de passe doit contenir au moins 8 caractères.'
             ]);
-    
+
             // Recherche de l'utilisateur avec eager loading si nécessaire
             $utilisateur = Utilisateur::where('email', $credentials['email'])->first();
-    
+
             if (!$utilisateur) {
                 Log::warning('Email non trouvé', ['email' => $credentials['email']]);
                 return back()
@@ -221,17 +225,17 @@ class UtilisateurController extends Controller
                         'email' => 'Identifiants incorrects',
                     ]);
             }
-    
+
             // Vérification du mot de passe
             if (!Hash::check($credentials['mdp'], $utilisateur->mdp)) {
                 Log::warning('Mot de passe incorrect', ['id' => $utilisateur->id]);
                 return back()
                     ->withInput($request->only('email'))
                     ->withErrors([
-                        'email' => 'Identifiants incorrects', 
+                        'email' => 'Identifiants incorrects',
                     ]);
             }
-    
+
             // Vérification du statut du compte
             if (!$utilisateur->statut) {
                 Log::warning('Compte désactivé', ['id' => $utilisateur->id]);
@@ -241,25 +245,25 @@ class UtilisateurController extends Controller
                         'email' => 'Ce compte est désactivé. Contactez l\'administrateur.',
                     ]);
             }
-    
+
             // Authentification et "remember me" optionnel
             Auth::login($utilisateur, $request->filled('remember'));
-    
+
             // Régénération de la session pour éviter le fixation attack
             $request->session()->regenerate();
-    
+
             Log::info('Connexion réussie', ['id' => $utilisateur->id]);
-    
+
             // Redirection vers la page prévue ou dashboard
             return redirect()->intended(route('dashboard'))
                 ->with('success', 'Bienvenue ' . $utilisateur->nom . ' !');
-    
+
         } catch (\Exception $e) {
             Log::error('Erreur d\'authentification', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return back()
                 ->withInput()
                 ->withErrors([

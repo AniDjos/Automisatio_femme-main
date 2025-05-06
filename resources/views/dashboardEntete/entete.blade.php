@@ -1366,7 +1366,7 @@
                             </button>
                             <div class="profile-dropdown" id="profile-dropdown">
                                 <div class="dropdown-header">
-                                    <p class="profile-name">{{ Auth::user()->nom }}</p>
+                                    <p class="profile-name">{{ Auth::user()->nom . ' ' . Auth::user()->prenom }}</p>
                                     <p class="dropdown-email">{{ Auth::user()->email }}</p>
                                 </div>
                                 <ul class="dropdown-menu">

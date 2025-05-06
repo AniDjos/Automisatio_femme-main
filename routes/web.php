@@ -312,6 +312,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 });
 
+Route::middleware(['auth', 'verified', 'can:admin-access'])->prefix('admin')->group(function () {
 
     Route::get('/settings', [SiteSettingsController::class, 'index'])->name('admin.settings');
 
@@ -320,7 +321,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings/upload-logo', [SiteSettingsController::class, 'uploadLogo'])->name('admin.settings.upload.logo');
     
     Route::post('/settings/upload-favicon', [SiteSettingsController::class, 'uploadFavicon'])->name('admin.settings.upload.favicon');
-
+});
 
 
 

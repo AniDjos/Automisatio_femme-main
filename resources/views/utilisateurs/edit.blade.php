@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-form">
     <h1 class="form-title">Modifier l'Utilisateur</h1>
-    <form action="{{ route('utilisateurs.update', $utilisateur->utilisateur_id) }}" method="POST" class="form-utilisateur">
+    <form action="{{ route('utilisateurs.update', $utilisateur->id) }}" method="POST" class="form-utilisateur">
         @csrf
         @method('PUT')
 
@@ -30,7 +30,7 @@
         <!-- Champ Mot de Passe -->
         <div class="form-group">
             <label for="mdp">Mot de Passe</label>
-            <input type="password" id="mdp" name="mdp" value="{{ $utilisateur->mdp }}" placeholder="Entrez le mot de passe" required>
+            <input type="password" id="mdp" name="mdp" value="{{ $utilisateur->password }}" placeholder="Entrez le mot de passe" required>
 
         <!-- Champ Rôle -->
         <div class="form-group">
@@ -38,20 +38,10 @@
             <select id="role" name="role" required>
                 <option value="" disabled>Choisissez un rôle</option>
                 <option value="admin" {{ $utilisateur->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="utilisateur" {{ $utilisateur->role == 'utilisateur' ? 'selected' : '' }}>Gestionnaire de la plateforme</option>
+                <option value="utilisateur" {{ $utilisateur->role == 'gestionnaire de la plateforme' ? 'selected' : '' }}>Gestionnaire de la plateforme</option>
                 <option value="moderateur" {{ $utilisateur->role == 'moderateur' ? 'selected' : '' }}>Simple Utilisateur</option>
             </select>
         </div>
-
-        <!-- Champ Statut -->
-        <div class="form-group">
-            <label for="statut">Statut</label>
-            <select id="statut" name="statut" required>
-                <option value="1" {{ $utilisateur->statut ? 'selected' : '' }}>Activé</option>
-                <option value="0" {{ !$utilisateur->statut ? 'selected' : '' }}>Désactivé</option>
-            </select>
-        </div>
-
         <button type="submit" class="btn-submit">Mettre à jour l'Utilisateur</button>
     </form>
 </div>

@@ -93,8 +93,8 @@
                 <select id="role" name="role" required>
                     <option value="" disabled selected>Choisissez un rôle</option>
                     <option value="admin">Admin</option>
-                    <option value="Gestionnaire de la plateforme">Gestionnaire de la plateforme</option>
-                    <option value="Responsable Groupement">Responsable Groupemen</option>
+                    <option value="Gestionnaire du ministere">Gestionnaire de la plateforme</option>
+                    <option value="Responsable Groupement">Responsable Groupement</option>
                 </select>
             </div>
         </div>

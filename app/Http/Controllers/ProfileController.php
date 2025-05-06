@@ -22,13 +22,17 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
         ]);
 
         $user = Auth::user();
-        $user->name = $request->name;
+        $user->nom = $request->nom;
+        $user->prenom = $request->prenom;
         $user->email = $request->email;
+        $user->role = $request->role;
         $user->save();
 
         return redirect()->back()->with('success', 'Vos informations ont été mises à jour avec succès.');

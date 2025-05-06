@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,36 +15,29 @@ class SiteSettingsController extends Controller
      */
     public function index()
     {
-        // Récupérer l'utilisateur connecté
-        $user = Auth::user();
-
-        // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' ) {
-            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
-        }
-        // Récupérer les paramètres existants depuis la base de données
+        // Récupérer les paramètres depuis le fichier .env
         $settings = [
-            'site_name' => setting('site_name'),
-            'site_logo' => setting('site_logo'),
-            'contact_email' => setting('contact_email'),
-            'contact_phone' => setting('contact_phone'),
-            'physical_address' => setting('physical_address'),
-            'site_theme' => setting('site_theme', 'light'),
-            'primary_color' => setting('primary_color', '#4f46e5'),
-            'favicon' => setting('favicon'),
-            'meta_title' => setting('meta_title'),
-            'meta_description' => setting('meta_description'),
-            'meta_keywords' => setting('meta_keywords'),
-            'google_analytics' => setting('google_analytics'),
-            'mail_from_address' => setting('mail_from_address'),
-            'mail_from_name' => setting('mail_from_name'),
-            'mail_host' => setting('mail_host'),
-            'mail_port' => setting('mail_port'),
-            'mail_username' => setting('mail_username'),
-            'mail_password' => setting('mail_password'),
-            'mail_encryption' => setting('mail_encryption'),
+            'site_name' => env('APP_NAME', 'Default Site Name'),
+            'site_url' => env('APP_URL', 'http://localhost'),
+            'app_env' => env('APP_ENV', 'local'),
+            'app_debug' => env('APP_DEBUG', false),
+            'db_connection' => env('DB_CONNECTION', 'mysql'),
+            'db_host' => env('DB_HOST', '127.0.0.1'),
+            'db_port' => env('DB_PORT', '3306'),
+            'db_database' => env('DB_DATABASE', 'database_name'),
+            'db_username' => env('DB_USERNAME', 'root'),
+            'db_password' => env('DB_PASSWORD', ''),
+            'mail_mailer' => env('MAIL_MAILER', 'smtp'),
+            'mail_host' => env('MAIL_HOST', 'localhost'),
+            'mail_port' => env('MAIL_PORT', '1025'),
+            'mail_username' => env('MAIL_USERNAME', null),
+            'mail_password' => env('MAIL_PASSWORD', null),
+            'mail_encryption' => env('MAIL_ENCRYPTION', null),
+            'mail_from_address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+            'mail_from_name' => env('MAIL_FROM_NAME', 'Default Name'),
         ];
 
+        // Retourner les paramètres à la vue
         return view('profile.setting', compact('settings'));
     }
 
@@ -56,31 +49,31 @@ class SiteSettingsController extends Controller
         // Validation des données
         $validated = $request->validate([
             'site_name' => 'required|string|max:255',
-            'contact_email' => 'required|email|max:255',
-            'contact_phone' => 'nullable|string|max:20',
-            'physical_address' => 'nullable|string|max:500',
-            'site_theme' => 'required|in:light,dark',
-            'primary_color' => 'required|string|max:7',
-            'meta_title' => 'nullable|string|max:60',
-            'meta_description' => 'nullable|string|max:160',
-            'meta_keywords' => 'nullable|string|max:255',
-            'google_analytics' => 'nullable|string',
-            'mail_from_address' => 'required|email|max:255',
-            'mail_from_name' => 'required|string|max:255',
+            'site_url' => 'required|url|max:255',
+            'app_env' => 'required|in:local,production,staging',
+            'app_debug' => 'required|boolean',
+            'db_connection' => 'required|string|max:50',
+            'db_host' => 'required|string|max:255',
+            'db_port' => 'required|integer',
+            'db_database' => 'required|string|max:255',
+            'db_username' => 'required|string|max:255',
+            'db_password' => 'nullable|string|max:255',
+            'mail_mailer' => 'required|string|max:50',
             'mail_host' => 'nullable|string|max:255',
             'mail_port' => 'nullable|integer',
             'mail_username' => 'nullable|string|max:255',
             'mail_password' => 'nullable|string|max:255',
             'mail_encryption' => 'nullable|in:tls,ssl',
+            'mail_from_address' => 'required|email|max:255',
+            'mail_from_name' => 'required|string|max:255',
         ]);
 
-        // Enregistrement des paramètres
+        // Mettre à jour les valeurs dans le fichier .env
         foreach ($validated as $key => $value) {
-            setting([$key => $value])->save();
+            $this->updateEnvVariable(strtoupper($key), $value);
         }
 
-        return redirect()->route('admin.settings')
-            ->with('success', 'Les paramètres ont été mis à jour avec succès.');
+        return redirect()->back()->with('success', 'Les paramètres ont été mis à jour avec succès.');
     }
 
     /**
@@ -139,5 +132,24 @@ class SiteSettingsController extends Controller
         }
 
         return response()->json(['success' => false], 400);
+    }
+
+    /**
+     * Mettre à jour une variable dans le fichier .env
+     */
+    private function updateEnvVariable($key, $value)
+    {
+        $envFile = base_path('.env');
+        if (file_exists($envFile)) {
+            $envContent = file_get_contents($envFile);
+            $pattern = "/^{$key}=.*$/m";
+            $replacement = "{$key}={$value}";
+            if (preg_match($pattern, $envContent)) {
+                $envContent = preg_replace($pattern, $replacement, $envContent);
+            } else {
+                $envContent .= "\n{$replacement}";
+            }
+            file_put_contents($envFile, $envContent);
+        }
     }
 }
