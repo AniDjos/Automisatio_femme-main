@@ -27,10 +27,11 @@ class DashboardController extends Controller
         $equipements = DB::table('equipement')->get();
     
         // Exemple de données dynamiques à récupérer depuis la base de données
-        $departements = DB::table('departement')->select('departement_libelle')->get();
-        $groupementsParDepartement = DB::table('groupement')
-            ->select(DB::raw('departement_id, COUNT(*) as total'))
-            ->groupBy('departement_id')
+
+        // Données pour les graphiques
+        $departements = Departement::pluck('departement_libelle');
+        $groupementsParDepartement = Groupement::groupBy('departement_id')
+            ->selectRaw('departement_id, COUNT(*) as total')
             ->pluck('total', 'departement_id');
 
         $typesAppuis = DB::table('appuis')->select('type_appuis')->distinct()->get();
@@ -62,4 +63,5 @@ class DashboardController extends Controller
         ));
 
 
-}    }
+} 
+   }

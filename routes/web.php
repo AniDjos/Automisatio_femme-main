@@ -33,6 +33,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::group(['middleware' => 'check.device'], function () {
 
 Route::get('/', [AcceuilController::class,'Acceuil'])->name('App_acceuil');
 
@@ -323,6 +324,6 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])->prefix('admin')->gr
     Route::post('/settings/upload-favicon', [SiteSettingsController::class, 'uploadFavicon'])->name('admin.settings.upload.favicon');
 });
 
-
+});
 
 

@@ -223,19 +223,19 @@
                         @foreach($appuis as $appui)
                             <div class="form-group">
                                 <label for="type_appui_{{ $appui->id }}">Type d'Appui</label>
-                                <input type="text" id="type_appui_{{ $appui->id }}" name="appuis[{{ $appui->id }}][type]" value="{{ $appui->type_appuis }}" required>
+                                <input type="text" id="type_appui_{{ $appui->id }}" name="type_appui" value="{{ $appui->type_appuis }}" required>
                             </div>
                             
                             
                         
                             <div class="form-group full-width">
                                 <label for="description_appui_{{ $appui->id }}"> Description de l'Appui</label>
-                                <textarea id="description_appui_{{ $appui->id }}" name="appuis[{{ $appui->id }}][description]" rows="4" >{{ $appui->description }}</textarea>
+                                <textarea id="description_appui_{{ $appui->id }}" name="description_appui" rows="4" >{{ $appui->description }}</textarea>
                             </div>
                         
                             <div class="form-group">
                                 <label for="annee_appui_{{ $appui->id }}">Année d'Appui</label>
-                                <input type="date" id="annee_appui_{{ $appui->id }}" name="appuis[{{ $appui->id }}][annee]" value="{{ $appui->date_appuis }}" required>
+                                <input type="date" id="annee_appui_{{ $appui->id }}" name="annee_appui" value="{{ $appui->date_appuis }}" required>
                             </div>
                         @endforeach
 
@@ -275,12 +275,12 @@
                     @foreach($equipements as $equipement)
                         <div class="form-group">
                             <label for="nom_equipement_{{ $equipement->id }}">Équipement</label>
-                            <input type="text" id="nom_equipement_{{ $equipement->id }}" name="equipements[{{ $equipement->id }}][nom]" value="{{ $equipement->equipment_libelle }}" required>
+                            <input type="text" id="nom_equipement_{{ $equipement->id }}" name="equipement" value="{{ $equipement->equipment_libelle }}" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="etat_equipement_{{ $equipement->id }}">État de l'Équipement</label>
-                            <select id="etat_equipement_{{ $equipement->id }}" name="equipements[{{ $equipement->id }}][etat]" required>
+                            <select id="etat_equipement_{{ $equipement->id }}" name="etat_equipement" required>
                             <option value="neuf" {{ $equipement->stat_equipement == 'neuf' ? 'selected' : '' }}>Neuf</option>
                             <option value="use" {{ $equipement->stat_equipement == 'use' ? 'selected' : '' }}>Usé</option>
                             </select>
@@ -293,12 +293,12 @@
                     <div class="form-grid">
                         <div class="form-group full-width">
                             <label for="description_difficulte_{{ $equipement->id }}">Difficultés rencontrées</label>
-                            <textarea id="description_difficulte_{{ $equipement->id }}" name="equipements[{{ $equipement->id }}][difficulte]" rows="3">{{ $equipement->description_difficultie }}</textarea>
+                            <textarea id="description_difficulte_{{ $equipement->id }}" name="description_difficulte" rows="3">{{ $equipement->description_difficultie }}</textarea>
                         </div>
                         
                         <div class="form-group full-width">
                             <label for="description_besoin_{{ $equipement->id }}">Besoins</label>
-                            <textarea id="description_besoin_{{ $equipement->id }}" name="equipements[{{ $equipement->id }}][besoin]" rows="3">{{ $equipement->description_besoin }}</textarea>
+                            <textarea id="description_besoin_{{ $equipement->id }}" name="description_besoin" rows="3">{{ $equipement->description_besoin }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -321,12 +321,12 @@
                         @foreach($agrements as $agrement)
                         <div class="form-group">
                             <label for="reference_agrement_{{ $agrement->id }}">Référence de l'agrément</label>
-                            <input type="text" id="reference_agrement_{{ $agrement->id }}" name="reference_agrement" value="{{ $agrement->reference }}" required>
+                            <input type="text" id="reference_agrement_{{ $agrement->id }}" name="reference" value="{{ $agrement->reference }}" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="date_agrement_{{ $agrement->id }}">Année de Délivrance</label>
-                            <input type="date" id="date_agrement_{{ $agrement->id }}" name="agrements[{{ $agrement->id }}][date]" value="{{ $agrement->date_deliver }}" required>
+                            <input type="date" id="date_agrement_{{ $agrement->id }}" name="annee_delivrance" value="{{ $agrement->date_deliver }}" required>
                         </div>
                         
                         <!-- <div class="form-group upload-group">
@@ -359,7 +359,7 @@
     /* Base styles */
     .container-print {
         width: 1000PX;
-        margin: 6rem 1rem 1rem 19rem;
+        margin: 6rem 1rem 1rem 24rem;
         padding: 2rem;
         background-color: #ffffff;
         border-radius: 16px;

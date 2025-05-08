@@ -1,6 +1,6 @@
 @extends('welcome')
 
-@section('title', 'Dashboard Général')
+@section('name', 'Dashboard Général')
 
 @section('content')
 <style>
@@ -332,24 +332,24 @@ table tr:hover {
         </div>
     </div>
 
-    <!-- Graphiques -->
+    <!-- Section des graphiques -->
     <div class="charts-container">
-        <!-- Graphique 1 : Nombre de groupements par département -->
+        <!-- Graphique 1 -->
         <div class="chart-card">
             <h3>Groupements par Département</h3>
-            <canvas id="groupementsParDepartement" width="400" height="300"></canvas>
+            <canvas id="groupementsChart" width="400" height="300"></canvas>
         </div>
 
-        <!-- Graphique 2 : Répartition des Appuis -->
+        <!-- Graphique 2 -->
         <div class="chart-card">
             <h3>Répartition des Appuis</h3>
-            <canvas id="eautreGraphique" width="400" height="300"></canvas>
+            <canvas id="appuisChart" width="400" height="300"></canvas>
         </div>
 
-        <!-- Graphique 3 : État des Équipements -->
+        <!-- Graphique 3 -->
         <div class="chart-card">
             <h3>État des Équipements</h3>
-            <canvas id="etatEquipements" width="400" height="300"></canvas>
+            <canvas id="equipementsChart" width="400" height="300"></canvas>
         </div>
     </div>
 
@@ -444,205 +444,79 @@ table tr:hover {
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Définition de la palette de couleurs pour les graphiques
-const chartColors = {
-    blue: ['#4361EE', '#3A0CA3', '#4895EF', '#4CC9F0'],
-    purple: ['#7209B7', '#8B5CF6', '#A78BFA', '#C4B5FD'],
-    red: ['#F72585', '#F94144', '#F3722C', '#F8961E'],
-    green: ['#06D6A0', '#10B981', '#34D399', '#6EE7B7']
-};
-
-// Configuration globale des graphiques
-Chart.defaults.font.family = "'Poppins', 'Helvetica', 'Arial', sans-serif";
-Chart.defaults.font.size = 13;
-Chart.defaults.color = '#4B5563';
-Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(17, 24, 39, 0.8)';
-Chart.defaults.plugins.tooltip.padding = 12;
-Chart.defaults.plugins.tooltip.cornerRadius = 8;
-Chart.defaults.plugins.legend.labels.usePointStyle = true;
-
-// Graphique 1 : Groupements par Département
-@isset($departements , $groupementsParDepartement)
-const ctx1 = document.getElementById('groupementsParDepartement')?.getContext('2d');
-if (ctx1) {
-    new Chart(ctx1, {
-        type: 'bar',
-        data: {
-            labels: @json($departements), 
-            datasets: [{
-                label: 'Nombre de Groupements',
-                data: Object.values(@json($groupementsParDepartement)),
-                backgroundColor: chartColors.blue,
-                borderWidth: 0,
-                borderRadius: 6,
-                hoverOffset: 4
-            }]
+    // Configuration des graphiques
+    const chartConfig = {
+        colors: {
+            blue: ['#4361EE', '#3A0CA3', '#4895EF', '#4CC9F0'],
+            purple: ['#7209B7', '#8B5CF6', '#A78BFA', '#C4B5FD'],
+            red: ['#F72585', '#F94144', '#F3722C', '#F8961E'],
+            green: ['#06D6A0', '#10B981', '#34D399', '#6EE7B7']
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { position: 'bottom' },
                 tooltip: {
-                    callbacks: {
-                        label: (item) => {
-                            const label = item.label || item.chart.data.labels[item
-                                .dataIndex]; // Récupère le label correct
-                            const value = item.raw; // Récupère la valeur brute
-                            const percentage = totalAppuis > 0 ?
-                                ((value / totalAppuis) * 100).toFixed(1) :
-                                0;
-                            return `${label}: ${value} (${percentage}%)`;
-                        }
-                    }
+                    backgroundColor: 'rgba(17, 24, 39, 0.8)',
+                    padding: 12,
+                    cornerRadius: 8
                 }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        display: true,
-                        color: '#E5E7EB',
-                        drawBorder: false
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            },
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart'
             }
         }
+    };
+
+    // Initialisation des graphiques
+    document.addEventListener('DOMContentLoaded', function() {
+        initGroupementsChart();
+        initAppuisChart();
+        initEquipementsChart();
     });
-}
-@endisset
 
-// Graphique 2 : Répartition des Appuis
-@isset($typesAppuis, $repartitionAppuis)
-const ctx2 = document.getElementById('autreGraphique')?.getContext('2d');
-if (ctx2) {
-    const repartitionAppuis = @json($repartitionAppuis);
-    const totalAppuis = Object.values(repartitionAppuis).reduce((a, b) => a + b, 0);
-
-    new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-            labels: @json($typesAppuis),
-            datasets: [{
-                data: Object.values(repartitionAppuis),
-                backgroundColor: [...chartColors.purple, ...chartColors.red],
-                borderWidth: 2,
-                borderColor: '#FFFFFF',
-                hoverOffset: 15
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: (item) => {
-                            const percentage = totalAppuis > 0 ?
-                                ((item.raw / totalAppuis) * 100).toFixed(1) :
-                                0;
-                            return `${item.label}: ${item.formattedValue} (${percentage}%)`;
-                        }
-                    }
-                }
+    function initGroupementsChart() {
+        const ctx = document.getElementById('groupementsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @json($departements),
+                datasets: [{
+                    label: 'Nombre de Groupements',
+                    data: @json($groupementsParDepartement->values()),
+                    backgroundColor: chartConfig.colors.blue
+                }]
             },
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart'
-            }
-        }
-    });
-}
-@endisset
+            options: chartConfig.options
+        });
+    }
 
-// Graphique 3 : État des Équipements
-@isset($etatsEquipements, $repartitionEquipements)
-const ctx3 = document.getElementById('etatEquipements')?.getContext('2d');
-if (ctx3) {
-    const repartitionEquipements = @json($repartitionEquipements);
-    const totalEquipements = Object.values(repartitionEquipements).reduce((a, b) => a + b, 0);
-
-    new Chart(ctx3, {
-        type: 'doughnut',
-        data: {
-            labels: @json($etatsEquipements),
-            datasets: [{
-                data: Object.values(repartitionEquipements),
-                backgroundColor: [...chartColors.green, ...chartColors.red],
-                borderWidth: 2,
-                borderColor: '#FFFFFF',
-                hoverOffset: 15
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true, // Assure que le ratio largeur/hauteur est maintenu
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: (item) => {
-                            const percentage = totalEquipements > 0 ?
-                                ((item.raw / totalEquipements) * 100).toFixed(1) :
-                                0;
-                            return `${item.label}: ${item.formattedValue} (${percentage}%)`;
-                        }
-                    }
-                }
+    function initAppuisChart() {
+        const ctx = document.getElementById('appuisChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: @json($repartitionAppuis->keys()),
+                datasets: [{
+                    data: @json($repartitionAppuis->values()),
+                    backgroundColor: chartConfig.colors.purple
+                }]
             },
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart'
-            }
-        }
-    });
-}
-@endisset
+            options: chartConfig.options
+        });
+    }
 
-// Animation des vagues sinusoïdales
-document.querySelectorAll('.sinusoid').forEach(wave => {
-    wave.animate([{
-            transform: 'translateX(-10%)'
-        },
-        {
-            transform: 'translateX(0%)'
-        },
-        {
-            transform: 'translateX(10%)'
-        },
-        {
-            transform: 'translateX(0%)'
-        },
-        {
-            transform: 'translateX(-10%)'
-        }
-    ], {
-        duration: 8000,
-        iterations: Infinity
-    });
-});
+    function initEquipementsChart() {
+        const ctx = document.getElementById('equipementsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: @json($repartitionEquipements->keys()),
+                datasets: [{
+                    data: @json($repartitionEquipements->values()),
+                    backgroundColor: chartConfig.colors.green
+                }]
+            },
+            options: chartConfig.options
+        });
+    }
 </script>
 @endsection

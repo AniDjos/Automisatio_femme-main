@@ -223,14 +223,6 @@
         </div>
     </main>
 
-    <footer class="bg-white border-t mt-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div class="text-center text-gray-500 text-sm">
-                &copy; {{ date('Y') }} {{ config('app.name') }}. Tous droits réservés.
-            </div>
-        </div>
-    </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const editProfileBtn = document.getElementById('edit-profile-btn');

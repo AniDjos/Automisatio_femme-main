@@ -47,9 +47,9 @@ class AgrementController extends Controller
 
         // Récupérer les agréments avec pagination
         $agrements = $query->orderBy('agrement.agrement_id', 'desc')->paginate(6);
-
+        $groupements = Groupement::all();
         // Retourner la vue avec les agréments
-        return view('agrements.index', compact('agrements'));
+        return view('agrements.index', compact('agrements','groupements'));
     }
 
     public function create()

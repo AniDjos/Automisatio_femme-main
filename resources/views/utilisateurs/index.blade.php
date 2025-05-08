@@ -110,7 +110,7 @@
 <style>
 .containerer {
     max-width: 1200px;
-    margin: 5rem 0rem 0.5rem 17rem;
+    margin: 5rem 0rem 0.5rem 20rem;
     padding: 2.5rem;
     background-color: #ffffff;
     border-radius: 12px;

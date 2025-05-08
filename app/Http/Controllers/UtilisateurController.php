@@ -91,7 +91,7 @@ class UtilisateurController extends Controller
         $user = Auth::user();
 
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere ') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
         return view('utilisateurs.create');
@@ -105,26 +105,35 @@ class UtilisateurController extends Controller
             'prenom' => 'required|string|max:50',
             'email' => 'required|email|max:100|unique:users,email,' . $id . ',id',
             'role' => 'required|string|max:255',
-            'mdp' => 'nullable|string|min:8|confirmed',
         ]);
 
-
-        // Vérification de l'utilisateur connecté
-        if (!Auth::user()->can('update', User::class)) {
+        // Vérification des permissions
+        $user = Auth::user();
+        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
             return redirect()->route('utilisateurs.index')->with('error', 'Action non autorisée.');
         }
 
-        // Mise à jour de l'utilisateur
-        DB::table('users')->where('id', $id)->update([
-            'nom' => $validatedData['nom'],
-            'prenom' => $validatedData['prenom'],
-            'email' => $validatedData['email'],
-            'role' => $validatedData['role'],
-            'password' => $validatedData['mdp'] ? Hash::make($validatedData['mdp']) : DB::raw('mdp'),
-            'updated_at' => now(),
-        ]);
+        // Récupérer l'utilisateur cible
+        $utilisateur = DB::table('users')->where('id', $id)->first();
 
-        return redirect()->route('utilisateurs.index')->with('success', 'Utilisateur mis à jour avec succès.');
+        if (!$utilisateur) {
+            return redirect()->route('utilisateurs.index')->with('error', 'Utilisateur introuvable.');
+        }
+
+        // Mise à jour de l'utilisateur
+        try {
+            DB::table('users')->where('id', $id)->update([
+                'nom' => $validatedData['nom'],
+                'prenom' => $validatedData['prenom'],
+                'email' => $validatedData['email'],
+                'role' => $validatedData['role'],
+                'updated_at' => now(),
+            ]);
+
+            return redirect()->route('utilisateurs.index')->with('success', 'Utilisateur mis à jour avec succès.');
+        } catch (\Exception $e) {
+            return redirect()->route('utilisateurs.index')->with('error', 'Une erreur est survenue lors de la mise à jour.');
+        }
     }
 
     public function destroy($id)

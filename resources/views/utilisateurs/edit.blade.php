@@ -26,12 +26,7 @@
             <label for="email">Email</label>
             <input type="email" id="email" name="email" value="{{ $utilisateur->email }}" placeholder="Entrez l'email" required>
         </div>
-
-        <!-- Champ Mot de Passe -->
-        <div class="form-group">
-            <label for="mdp">Mot de Passe</label>
-            <input type="password" id="mdp" name="mdp" value="{{ $utilisateur->password }}" placeholder="Entrez le mot de passe" required>
-
+        
         <!-- Champ Rôle -->
         <div class="form-group">
             <label for="role">Rôle</label>

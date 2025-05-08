@@ -182,8 +182,8 @@
                     <option value="" disabled selected>Choisissez un rôle</option>
                     <option value="Présidente">Présidente</option>
                     <option value="Secrétaire">Secrétaire</option>
-                    <option value="Personnel simple">Membre</option>
-                    <option value="Personnel simple">Trésorière</option>
+                    <option value="Membre">Membre</option>
+                    <option value="Trésorière">Trésorière</option>
                 </select>
             </div>
         </div>

@@ -15,9 +15,17 @@
     </div>
 
     <div class="agrement-card">
-        <!-- Tableau des agréments -->
+        <!-- Barre de recherche et filtre -->
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Rechercher dans le tableau..." class="search-input">
+            
+            <!-- Filtre par groupement -->
+            <select id="groupementFilter" class="filter-select">
+                <option value="">Tous les groupements</option>
+                @foreach($groupements as $groupement)
+                    <option value="{{ $groupement->nom }}">{{ $groupement->nom }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="table-responsive">
@@ -45,9 +53,7 @@
                                 </a>
                             </td>
                             <td>{{ \Carbon\Carbon::parse($agrement->date_deliver)->format('d/m/Y') }}</td>
-                            <td>
-                                <span class="badge">{{ $agrement->groupement_nom ?? 'Non spécifié' }}</span>
-                            </td>
+                            <td class="groupement-column">{{ $agrement->groupement_nom ?? 'Non spécifié' }}</td>
                             <td class="action-buttons">
                                 <a href="{{ route('agrement.show', $agrement->agrement_id) }}" class="btn-action btn-view" title="Voir détails">
                                     <i class='bx bx-show-alt'></i>
@@ -101,7 +107,7 @@
 
 .agrement-container {
     max-width: 1200px;
-    margin: 5rem 1rem 2rem 17rem;
+    margin: 6rem 1rem 2rem 20rem;
     padding: 0 1rem;
     font-family: 'Montserrat', 'Poppins', sans-serif;
 }
@@ -290,12 +296,12 @@
 
 .btn-delete {
     background-color: var(--danger-color);
-    transform: translateY(-19px);
+    transform: translateY(-2px);
 }
 
 .btn-delete:hover {
     background-color: #d94546;
-    transform: translateY(-22px);
+    transform: translateY(-4px);
 }
 
 /* No Data */
@@ -341,7 +347,7 @@
 .search-container {
     margin-bottom: 1.5rem;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -357,6 +363,23 @@
 }
 
 .search-input:focus {
+    border-color: #7367F0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(115, 103, 240, 0.2);
+}
+
+/* Ajout du style pour le filtre */
+.filter-select {
+    margin-left: 1rem;
+    padding: 0.8rem;
+    font-size: 16px;
+    border: 1px solid #7367F0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.filter-select:focus {
     border-color: #7367F0;
     outline: none;
     box-shadow: 0 0 0 3px rgba(115, 103, 240, 0.2);
@@ -387,24 +410,31 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
+    const groupementFilter = document.getElementById('groupementFilter');
     const table = document.getElementById('agrementTable');
     const rows = table.querySelectorAll('tbody tr');
 
     // Fonction pour filtrer les lignes du tableau
-    searchInput.addEventListener('input', function () {
+    function filterTable() {
         const searchValue = searchInput.value.toLowerCase();
+        const groupementValue = groupementFilter.value.toLowerCase();
 
         rows.forEach(row => {
             const cells = row.querySelectorAll('td');
             const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+            const groupementText = row.querySelector('.groupement-column').textContent.toLowerCase();
 
-            if (rowText.includes(searchValue)) {
+            if (rowText.includes(searchValue) && (groupementValue === '' || groupementText.includes(groupementValue))) {
                 row.style.display = ''; // Affiche la ligne
             } else {
                 row.style.display = 'none'; // Masque la ligne
             }
         });
-    });
+    }
+
+    // Écouteurs d'événements pour la recherche et le filtre
+    searchInput.addEventListener('input', filterTable);
+    groupementFilter.addEventListener('change', filterTable);
 });
 </script>
 @endsection
