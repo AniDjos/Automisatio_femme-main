@@ -11,6 +11,9 @@
             padding: 50px;
         }
         h1 {
+            color: #9b87f5;
+        }
+        h2 {
             color: #ff0000;
         }
         p {
@@ -19,7 +22,8 @@
     </style>
 </head>
 <body>
-    <h1>Accès non autorisé</h1>
+    <h1>MicroGuest</h1>
+    <h2>Accès non autorisé</h2>
     <p>Ce site est uniquement accessible depuis un ordinateur. Veuillez réessayer depuis un PC.</p>
 </body>
 </html>
