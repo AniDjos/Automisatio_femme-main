@@ -965,7 +965,7 @@
                                     <line x1="3" y1="12" x2="3.01" y2="12"></line>
                                     <line x1="3" y1="18" x2="3.01" y2="18"></line>
                                 </svg>
-                                <span>Liste Membre</span>
+                                <span>Liste d'agrement</span>
                             </a>
                             <a href="" class="submenu-item">
                                 <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"

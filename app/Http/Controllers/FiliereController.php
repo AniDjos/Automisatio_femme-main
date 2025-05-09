@@ -15,7 +15,7 @@ class FiliereController extends Controller
                 $user = Auth::user();
     
                 // Vérifier le rôle de l'utilisateur
-                if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
+                if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
                     return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
                 }
         return view('filiere.create');
@@ -44,7 +44,7 @@ class FiliereController extends Controller
         $user = Auth::user();
     
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
     

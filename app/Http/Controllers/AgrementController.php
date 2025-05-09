@@ -32,7 +32,7 @@ class AgrementController extends Controller
             );
 
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             // Si l'utilisateur n'est pas admin ou gestionnaire, fi
             redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
@@ -58,7 +58,7 @@ class AgrementController extends Controller
         $user = Auth::user();
 
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
         $groupements = Groupement::all();

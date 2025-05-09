@@ -148,11 +148,14 @@ class GroupementController extends Controller
         if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
+
+        // Récupérer les données nécessaires
         $departements = Departement::all();
         $activites = Activite::all();
-        $filieres = Filiere::all();
+        $filieres = Filiere::all(); // Assurez-vous que cette ligne est présente
         $structures = Structure::all();
 
+        // Passer les données à la vue
         return view('groupements.create', compact('departements', 'activites', 'filieres', 'structures'));
     }
 

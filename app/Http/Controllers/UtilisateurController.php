@@ -46,7 +46,7 @@ class UtilisateurController extends Controller
         $user = Auth::user();
 
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('dashboard')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
 
@@ -91,7 +91,7 @@ class UtilisateurController extends Controller
         $user = Auth::user();
 
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere ') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
         return view('utilisateurs.create');
@@ -109,7 +109,7 @@ class UtilisateurController extends Controller
 
         // Vérification des permissions
         $user = Auth::user();
-        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('utilisateurs.index')->with('error', 'Action non autorisée.');
         }
 
@@ -138,11 +138,6 @@ class UtilisateurController extends Controller
 
     public function destroy($id)
     {
-        // Vérification de l'utilisateur connecté
-        if (!Auth::user()->can('delete', User::class)) {
-            return redirect()->route('utilisateurs.index')->with('error', 'Action non autorisée.');
-        }
-
         // Supprimer l'utilisateur par son ID
         DB::table('users')->where('id', $id)->delete();
 
@@ -181,7 +176,7 @@ class UtilisateurController extends Controller
     {
         // Vérification des permissions
         $user = Auth::user();
-        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('utilisateurs.index')->with('error', 'Action non autorisée.');
         }
 

@@ -14,15 +14,15 @@ class AppuiController extends Controller
 {
     public function create()
     {
-                        // Récupérer l'utilisateur connecté
-                        $user = Auth::user();
-    
-                        // Vérifier le rôle de l'utilisateur
-                        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
-                            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
-                        }
-        $groupements = Groupement::all(); 
-        $structures = Structure::all(); 
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+
+        // Vérifier le rôle de l'utilisateur
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
+            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+        }
+        $groupements = Groupement::all();
+        $structures = Structure::all();
         return view('appuis.create', compact('groupements', 'structures'));
     }
 
@@ -55,9 +55,9 @@ class AppuiController extends Controller
     {
         // Récupérer l'utilisateur connecté
         $user = Auth::user();
-    
+
         // Vérifier le rôle de l'utilisateur
-        if ($user->role === 'admin' || $user->role === 'gestionnaire') {
+        if ($user->role === 'admin' || $user->role === 'gestionnaire du ministere') {
             // Si l'utilisateur est admin ou gestionnaire, récupérer tous les appuis
             $groupements = Groupement::all();
             $appuis = Appuis::with(['groupement', 'structure'])
@@ -67,7 +67,7 @@ class AppuiController extends Controller
             // Sinon, afficher un message d'erreur ou rediriger
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
-    
+
         // Retourner la vue avec les appuis
         return view('appuis.index', compact('appuis', 'groupements'));
     }

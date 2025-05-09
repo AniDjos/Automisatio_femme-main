@@ -11,13 +11,13 @@ class ArrondissementController extends Controller
 {
     public function create()
     {
-                        // Récupérer l'utilisateur connecté
-                        $user = Auth::user();
-    
-                        // Vérifier le rôle de l'utilisateur
-                        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
-                            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
-                        }
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+
+        // Vérifier le rôle de l'utilisateur
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
+            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+        }
         $communes = Commune::all(); // Récupère toutes les communes
         return view('arrondissements.create', compact('communes'));
     }
@@ -36,21 +36,21 @@ class ArrondissementController extends Controller
         // Redirection avec un message de succès
         return redirect()->route('arrondissements.index')->with('success', 'Arrondissement enregistré avec succès.');
     }
-    
+
 
     public function index()
     {
         // Récupérer l'utilisateur connecté
         $user = Auth::user();
-    
+
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
-    
+
         // Récupérer les arrondissements avec leur commune
         $arrondissements = Arrondissement::with('commune')->orderBy('arrondissement_id', 'desc')->paginate(7);
-    
+
         // Retourner la vue avec les arrondissements
         return view('arrondissements.index', compact('arrondissements'));
     }

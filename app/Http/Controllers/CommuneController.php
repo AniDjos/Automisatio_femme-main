@@ -12,13 +12,13 @@ class CommuneController extends Controller
 {
     public function create()
     {
-                        // Récupérer l'utilisateur connecté
-                        $user = Auth::user();
-    
-                        // Vérifier le rôle de l'utilisateur
-                        if ($user->role !== 'admin' && $user->role !== 'Gestionnaire du ministere') {
-                            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
-                        }
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+
+        // Vérifier le rôle de l'utilisateur
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
+            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+        }
         $departements = Departement::all(); // Récupère tous les départements
         return view('communes.create', compact('departements'));
     }
@@ -38,21 +38,21 @@ class CommuneController extends Controller
         return redirect()->route('communes.index')->with('success', 'Commune enregistrée avec succès.');
     }
 
-   
+
 
     public function index()
     {
         // Récupérer l'utilisateur connecté
         $user = Auth::user();
-    
+
         // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire') {
+        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
             return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
-    
+
         // Récupérer les communes avec leur département
         $communes = Commune::with('departement')->orderBy('commune_id', 'desc')->paginate(10);
-    
+
         // Retourner la vue avec les communes
         return view('communes.index', compact('communes'));
     }
@@ -86,7 +86,7 @@ class CommuneController extends Controller
         // Redirection avec un message de succès
         return redirect()->route('communes.index')->with('success', 'Commune mise à jour avec succès.');
     }
-    
+
     public function destroy($id)
     {
         // Récupérer la commune par son ID

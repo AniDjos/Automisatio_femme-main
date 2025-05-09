@@ -8,8 +8,13 @@
         <div class="homee-content">
             <h2>Ministère des affaires sociales et de la microfiance (MASM)</h2>
             <h3>Emancipation de la femme notre devoir !</h3>
-            <p>Le groupement des professionnels de la santé est une association qui regroupe les professionnels de la santé
-                de la région de l'ouest du Cameroun.</p>
+            <p>
+                Le Ministère des Affaires Sociales et de la Microfinance (MASM) est un acteur clé dans la promotion du
+                développement social et économique au sein de notre pays. Il œuvre pour l'amélioration des conditions de vie
+                des populations vulnérables, en mettant en place des politiques et des programmes adaptés à leurs besoins.
+                Grâce à ses initiatives, le MASM contribue à l'autonomisation des femmes, à la lutte contre la pauvreté et à
+                la promotion de l'inclusion financière.
+            </p>
             <a href="#body-header" class="btnn">En savoir plus</a>
         </div>
 

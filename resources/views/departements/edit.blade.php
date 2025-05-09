@@ -6,7 +6,7 @@
 <div class="containerer">
     <h1 class="page-title">Modifier le Département</h1>
 
-    <form action="{{ route('departements.update', $departement->id) }}" method="POST">
+    <form action="{{ route('departements.update', $departement->departement_id) }}" method="POST">
         @csrf
         @method('PUT')
 
