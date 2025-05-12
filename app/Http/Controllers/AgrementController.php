@@ -71,11 +71,11 @@ class AgrementController extends Controller
         $request->validate([
             'structure' => 'required|string|max:255',
             'reference' => 'required|string|max:255',
-            'document' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048', // Limite de 2 Mo
+            'document' => 'file|mimes:jpg,jpeg,png,pdf|max:2048', // Limite de 2 Mo
             'date_deliver' => 'required|date',
             'groupement_id' => 'required|exists:groupement,groupement_id',
         ]);
-
+        $filename = null; 
         // Gestion du fichier
         if ($request->hasFile('document')) {
             $file = $request->file('document');

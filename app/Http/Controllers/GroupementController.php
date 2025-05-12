@@ -166,35 +166,37 @@ class GroupementController extends Controller
     {
         // Validation des données
         $validatedData = $request->validate([
-            'nom' => 'required|string|max:255',
-            'effectif' => 'required|integer|min:1',
-            'departement' => 'required|integer|exists:departement,departement_id',
-            'commune' => 'required|integer|exists:commune,commune_id',
-            'arrondissement' => 'required|integer|exists:arrondissement,arrondissement_id',
-            'quartier' => 'required|integer|exists:quartier,quartier_id',
-            'revenu' => 'required|numeric|min:0',
-            'benefice' => 'required|numeric|min:0',
-            'depense' => 'required|numeric|min:0',
-            'activite_principale' => 'required|integer|exists:activite,activite_id',
+            'nom' => 'string|max:255',
+            'effectif' => 'integer|min:1',
+            'departement' => 'integer|exists:departement,departement_id',
+            'commune' => 'integer|exists:commune,commune_id',
+            'arrondissement' => 'integer|exists:arrondissement,arrondissement_id',
+            'quartier' => 'integer|exists:quartier,quartier_id',
+            'revenu' => 'numeric|min:0',
+            'benefice' => 'numeric|min:0',
+            'depense' => 'numeric|min:0',
+            'activite_principale' => 'integer|exists:activite,activite_id',
             'activite_secondaire' => 'nullable|integer|exists:activite,activite_id',
-            'filiere' => 'required|integer|exists:filiere,filiere_id',
-            'date_creation' => 'required|date',
+            'filiere' => 'integer|exists:filiere,filiere_id',
+            'date_creation' => 'date',
+            'source_financement' => 'nullable|string|max:255',
 
             // Appui (conditionnel)
             'type_appui' => 'required_if:appui,true|nullable|string|in:financier,materiel',
-            'structure' => 'required_if:appui,true|nullable|integer|exists:structure,structure_id',
+            'structure' => 'nullable|integer|exists:structure,structure_id',
             'description_appui' => 'nullable|string',
             'annee_appui' => 'nullable|date',
+            'appui_masm' => 'nullable|boolean',
 
             // Équipement & Agrément
-            'equipement' => 'required|string|max:255',
-            'etat_equipement' => 'required|string|in:neuf,use',
+            'equipement' => 'string|max:255',
+            'etat_equipement' => 'string|in:neuf,use',
             'description_difficulte' => 'nullable|string',
             'description_besoin' => 'nullable|string',
-            'structure_delivrance' => 'required|nullable|integer|exists:structure,structure_id',
-            'reference' => 'required|string|max:255',
+            'structure_delivrance' => 'nullable|integer|exists:structure,structure_id',
+            'reference' => 'string|max:255',
             'agrement' => 'file|mimes:pdf,doc,docx,jpg,png|max:2048',
-            'annee_delivrance' => 'required|date',
+            'annee_delivrance' => 'date',
         ]);
 
         // Transaction pour garantir l'intégrité des données
@@ -211,6 +213,7 @@ class GroupementController extends Controller
                 'quartier' => $validatedData['quartier'],
                 'revenu_mens' => $validatedData['revenu'],
                 'benefice_mens' => $validatedData['benefice'],
+                'source_financement' => $validatedData['source_financement'],
                 'depense_mens' => $validatedData['depense'],
                 'activite_principale_id' => $validatedData['activite_principale'],
                 'activite_secondaire_id' => $validatedData['activite_secondaire'] ?? null,
@@ -225,19 +228,21 @@ class GroupementController extends Controller
             if ($request->boolean('appui')) {
                 Appuis::create([
                     'groupement_id' => $groupement->groupement_id,
-                    'type_appuis' => $validatedData['type_appui'],
-                    'structure_id' => $validatedData['structure'],
+                    'type_appuis' => $validatedData['type_appui'] ?? null,
+                    'structure_id' => $validatedData['structure'] ?? null,
                     'description' => $validatedData['description_appui'] ?? null,
                     'date_appuis' => $validatedData['annee_appui'] ?? null,
                     'users_id' => Auth::id(),
+                    'appui_masm' => $request->has('appui_masm') ? true : false,
+                    
                 ]);
             }
 
             // Création de l'équipement
             Equipement::create([
                 'groupement_id' => $groupement->groupement_id,
-                'equipment_libelle' => $validatedData['equipement'],
-                'stat_equipement' => $validatedData['etat_equipement'],
+                'equipment_libelle' => $validatedData['equipement'] ?? null,
+                'stat_equipement' => $validatedData['etat_equipement'] ?? null,
                 'description_difficultie' => $validatedData['description_difficulte'] ?? null,
                 'description_besoin' => $validatedData['description_besoin'] ?? null,
                 'users_id' => Auth::id(),
@@ -249,14 +254,14 @@ class GroupementController extends Controller
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $file->move(public_path('agrements'), $filename);
             }
-
+            $filename = null; 
             // Création de l'agrément
             Agrement::create([
                 'groupement_id' => $groupement->groupement_id,
-                'structure' => $validatedData['structure_delivrance'],
-                'reference' => $validatedData['reference'],
+                'structure' => $validatedData['structure_delivrance'] ?? null,
+                'reference' => $validatedData['reference'] ?? null,
                 'document' => $filename,
-                'date_deliver' => $validatedData['annee_delivrance'],
+                'date_deliver' => $validatedData['annee_delivrance'] ?? null,
                 'users_id' => Auth::id(),
             ]);
 
@@ -289,6 +294,7 @@ class GroupementController extends Controller
             'activite_secondaire' => 'nullable|integer|exists:activite,activite_id',
             'filiere' => 'required|integer|exists:filiere,filiere_id',
             'date_creation' => 'required|date',
+            'source_financement' => 'nullable|string|max:255',
 
             // Appui (conditionnel)
             'type_appui' => 'required_if:appui,true|nullable|string|in:financier,materiel',
@@ -326,6 +332,7 @@ class GroupementController extends Controller
                 'activite_secondaire_id' => $validatedData['activite_secondaire'] ?? null,
                 'filiere_id' => $validatedData['filiere'],
                 'date_creation' => $validatedData['date_creation'],
+                'source_financement' => $validatedData['source_financement'],
             ]);
 
             // Gestion de l'appui
@@ -448,6 +455,7 @@ class GroupementController extends Controller
                 'groupement.revenu_mens',
                 'groupement.benefice_mens',
                 'groupement.depense_mens',
+                'groupement.source_financement',
                 'groupement.date_creation',
                 'departement.departement_libelle as departement_nom',
                 'commune.commune_libelle as commune_nom',
@@ -465,6 +473,7 @@ class GroupementController extends Controller
                 'equipement.description_difficultie as description_difficultie',
                 'equipement.description_besoin as description_besoin',
                 'appuis.date_appuis as appui_date',
+                'appuis.appui_masm as appui_masm',
                 'structure.structure',
                 'agrement.reference as agrement_reference',
                 'agrement.date_deliver as agrement_date'

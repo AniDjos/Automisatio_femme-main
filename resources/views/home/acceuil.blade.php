@@ -20,7 +20,7 @@
 
         <div class="homee-img">
             <div class="femme">
-                <img src="{{ asset('images/FEME.png') }}" alt="Logo" style="width: ;">
+                <img src="{{ asset('images/acc.jpeg') }}" alt="Logo" style="width: ;">
             </div>
         </div>
 

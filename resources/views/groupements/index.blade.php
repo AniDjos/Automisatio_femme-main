@@ -86,7 +86,7 @@
                 <p class="info-item" data-tooltip="Activité principale du groupement">
                     <i class="fas fa-briefcase"></i>
                     <span>Activité principale :
-                        <strong>{{ $groupement->activite_principale ?? 'Non spécifiée' }}</strong></span>
+                        <strong>{{ $groupement->activite_principale_nom ?? 'Non spécifiée' }}</strong></span>
                 </p>
                 <p class="info-item" data-tooltip="Nombre total de membres">
                     <i class="fas fa-users"></i>

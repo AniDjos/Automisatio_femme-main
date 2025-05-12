@@ -702,7 +702,7 @@
             <!-- Sidebar -->
             <aside class="sidebar" id="sidebar">
                 <div class="sidebar-header">
-                    <h1 class="sidebar-logo" id="logo">MicroGuest</h1>
+                    <h1 class="sidebar-logo" id="logo">MicroGest</h1>
                     <button class="toggle-button" id="toggle-sidebar">
                         <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">

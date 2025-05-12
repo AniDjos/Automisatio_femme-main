@@ -88,12 +88,17 @@
                     <span class="info-label">Filière</span>
                     <span class="info-value">{{ $groupement->filiere_nom ?? 'N/A' }}</span>
                 </div>
+
                 <div class="info-item">
                     <span class="info-label">Activités</span>
                     <span class="info-value">
                         Principal: {{ $groupement->activite_principale_nom ?? 'N/A' }}<br>
                         Secondaire: {{ $groupement->activite_secondaire_nom ?? 'N/A' }}
                     </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">source_financement</span>
+                    <span class="info-value">{{ $groupement->source_financement ?? 'N/A' }}</span>
                 </div>
             </div>
         </div>
@@ -144,6 +149,16 @@
                         <div class="info-item">
                             <span class="info-label">Date</span>
                             <span class="info-value">{{ $groupement->appui_date }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Appui de MASM</span>
+                            <span class="info-value">
+                                @if ($groupement->appui_masm)
+                                    <span class="status-badge success">Oui</span>
+                                @else
+                                    <span class="status-badge danger">Non</span>
+                                @endif
+                            </span>
                         </div>
                     @else
                         <div class="empty-state">
@@ -312,6 +327,30 @@ body {
 .action-dropdown:hover .dropdown-content {
     display: block;
 }
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.success {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.danger {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}œ
 
 .dropdown-item {
     padding: 0.75rem 1rem;

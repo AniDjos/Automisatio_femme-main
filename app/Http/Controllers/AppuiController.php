@@ -38,6 +38,7 @@ class AppuiController extends Controller
             'date_appuis' => 'required|date',
             'groupement_id' => 'required|exists:groupement,groupement_id',
             'structure_id' => 'required|exists:structure,structure_id',
+            'appui_masm'=> 'nullable|boolean',
         ]);
 
         // Ajouter l'identifiant de l'utilisateur connecté aux données
