@@ -71,8 +71,9 @@ Suivez ces étapes pour installer le projet localement :
 
 1. **Cloner le dépôt**
    ```bash
-   git clone https://github.com/votre-utilisateur/votre-projet.git
-   cd votre-projet
+    git clone <url-du-repo>
+    
+    cd Automisatio_femme-main
 
 2.  Installer les dépendances PHP
 
