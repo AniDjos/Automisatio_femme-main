@@ -304,6 +304,7 @@
                             <select id="etat_equipement" name="etat_equipement">
                                 <option value="" disabled selected>Choisissez l'état</option>
                                 <option value="neuf">Neuf</option>
+                                <option value="neuf">Moin Neuf</option>
                                 <option value="use">Usé</option>
                             </select>
                         </div>

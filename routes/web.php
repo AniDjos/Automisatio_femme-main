@@ -17,6 +17,7 @@ use App\Http\Controllers\ArrondissementController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StructureController;
 use App\Models\Commune;
 use App\Models\Arrondissement;
 use App\Models\Quartier;
@@ -324,6 +325,19 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])->prefix('admin')->gr
     Route::post('/settings/upload-favicon', [SiteSettingsController::class, 'uploadFavicon'])->name('admin.settings.upload.favicon');
 });
 
+/**
+ * Routes pour la gestion des structures
+ * Ces routes permettent de créer, afficher, modifier et supprimer des structures.
+ */    
+    Route::get('/structures', [StructureController::class, 'index'])->name('structures.index');
+
+    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
+
+    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
+
+    Route::get('/structures/{id}/edit', [StructureController::class, 'edit'])->name('structures.edit');
+
+    Route::put('/structures/{id}', [StructureController::class, 'update'])->name('structures.update');
+
+    Route::delete('/structures/{id}', [StructureController::class, 'destroy'])->name('structures.destroy');
 });
-
-

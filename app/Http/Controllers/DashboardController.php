@@ -30,9 +30,11 @@ class DashboardController extends Controller
 
         // Données pour les graphiques
         $departements = Departement::pluck('departement_libelle');
-        $groupementsParDepartement = Groupement::groupBy('departement_id')
-            ->selectRaw('departement_id, COUNT(*) as total')
-            ->pluck('total', 'departement_id');
+        $groupementsParDepartement = DB::table('groupement')
+        ->join('departement', 'groupement.departement_id', '=', 'departement.departement_id')
+        ->select('departement.departement_libelle as departement', DB::raw('COUNT(groupement.groupement_id) as total'))
+        ->groupBy('departement.departement_libelle')
+        ->pluck('total', 'departement');
 
         $typesAppuis = DB::table('appuis')->select('type_appuis')->distinct()->get();
         $repartitionAppuis = DB::table('appuis')

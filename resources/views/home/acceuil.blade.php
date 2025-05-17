@@ -20,7 +20,7 @@
 
         <div class="homee-img">
             <div class="femme">
-                <img src="{{ asset('images/acc.jpeg') }}" alt="Logo" style="width: ;">
+                <img src="{{ asset('images/acceuil.png') }}" alt="Logo" style="width: ;">
             </div>
         </div>
 
@@ -156,9 +156,13 @@
 
         .homee-img .femme img {
             position: absolute;
-            max-width: 750px;
-            bottom: -85px;
-            right: -85px;
+            max-width: 470px;
+            height: 500px;
+            top: -35px;
+            bottom: 85px;
+            left: 50px;
+            right: 20px;
+            border-radius: 10%;
             transform: rotate(-45deg);
         }
 

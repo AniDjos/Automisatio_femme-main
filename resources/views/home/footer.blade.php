@@ -98,7 +98,7 @@
                                 <div class="w-5 h-5 flex items-center justify-center">
                                     <i class="ri-phone-line text-primary"></i>
                                 </div>
-                                <span class="text-gray-600">+33 1 23 45 67 89</span>
+                                <span class="text-gray-600">+229 0160420202</span>
                             </li>
                             <li class="flex items-center space-x-3">
                                 <div class="w-5 h-5 flex items-center justify-center">
@@ -133,14 +133,14 @@
                             </a>
                         </div>
                         
-                        <h3 class="text-gray-900 font-semibold text-lg mb-3">Newsletter</h3>
+                        <!-- <h3 class="text-gray-900 font-semibold text-lg mb-3">Newsletter</h3>
                         <p class="text-gray-600 mb-3">Recevez nos actualités et mises à jour</p>
                         <div class="flex">
                             <input type="email" placeholder="Votre email" class="px-4 py-2 border border-gray-300 rounded-l-button w-full text-sm" />
                             <button class="bg-primary text-white px-4 py-2 rounded-r-button whitespace-nowrap hover:bg-primary/90 transition-colors">
                                 S'abonner
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 

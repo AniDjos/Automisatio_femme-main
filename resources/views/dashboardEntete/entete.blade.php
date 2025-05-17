@@ -762,7 +762,7 @@
                                 </svg>
                                 <span>Liste Groupement</span>
                             </a>
-                            <a href="#" class="submenu-item">
+                            <!-- <a href="#" class="submenu-item">
                                 <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="2" width="20" height="20" rx="2"></rect>
@@ -770,7 +770,7 @@
                                     <line x1="12" y1="2" x2="12" y2="22"></line>
                                 </svg>
                                 <span>Rapport</span>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
@@ -815,7 +815,7 @@
                                 </svg>
                                 <span>Liste Membre</span>
                             </a>
-                            <a href="#" class="submenu-item">
+                            <!-- <a href="#" class="submenu-item">
                                 <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="2" width="20" height="20" rx="2"></rect>
@@ -823,7 +823,7 @@
                                     <line x1="12" y1="2" x2="12" y2="22"></line>
                                 </svg>
                                 <span>Rapport</span>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
@@ -916,7 +916,7 @@
                                 </svg>
                                 <span>Liste des CPS</span>
                             </a>
-                            <a href="" class="submenu-item">
+                            <!-- <a href="" class="submenu-item">
                                 <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="2" width="20" height="20" rx="2"></rect>
@@ -924,7 +924,7 @@
                                     <line x1="12" y1="2" x2="12" y2="22"></line>
                                 </svg>
                                 <span>Rapport</span>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
@@ -967,7 +967,7 @@
                                 </svg>
                                 <span>Liste d'agrement</span>
                             </a>
-                            <a href="" class="submenu-item">
+                            <!-- <a href="" class="submenu-item">
                                 <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="2" width="20" height="20" rx="2"></rect>
@@ -975,7 +975,7 @@
                                     <line x1="12" y1="2" x2="12" y2="22"></line>
                                 </svg>
                                 <span>Rapport</span>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
@@ -1066,7 +1066,7 @@
                                 </svg>
                                 <span>Liste Membre</span>
                             </a>
-                            <a href="" class="submenu-item">
+                            <!-- <a href="" class="submenu-item">
                                 <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="2" width="20" height="20" rx="2"></rect>
@@ -1074,7 +1074,7 @@
                                     <line x1="12" y1="2" x2="12" y2="22"></line>
                                 </svg>
                                 <span>Rapport</span>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
@@ -1116,7 +1116,7 @@
                                 </svg>
                                 <span>Liste Appui</span>
                             </a>
-                            <a href="#" class="submenu-item">
+                            <!-- <a href="#" class="submenu-item">
                                 <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="2" width="20" height="20" rx="2"></rect>
@@ -1124,7 +1124,7 @@
                                     <line x1="12" y1="2" x2="12" y2="22"></line>
                                 </svg>
                                 <span>Rapport</span>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
@@ -1210,6 +1210,50 @@
                                     <line x1="3" y1="18" x2="3.01" y2="18"></line>
                                 </svg>
                                 <span>Liste des communes</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Structure -->
+
+                    <div class="menu-group">
+                        <button class="menu-button" onclick="toggleMenu('structure')">
+                            <span class="menu-button-content">
+                                <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+
+                                <span class="menu-text">Structure</span>
+                            </span>
+                            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="submenu" id="structure-submenu">
+                            <a href="{{ route('structures.create') }}" class="submenu-item">
+                                <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                                </svg>
+                                <span>Ajouter</span>
+                            </a>
+                            <a href="{{ route('structures.index') }}" class="submenu-item">
+                                <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                </svg>
+                                <span>Liste des structures</span>
                             </a>
                         </div>
                     </div>
