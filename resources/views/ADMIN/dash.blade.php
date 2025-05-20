@@ -55,7 +55,7 @@
 /* Animation des conteneurs */
 .stats-container,
 .charts-container,
-.table-container {
+.cards-container {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -69,7 +69,7 @@
     animation-delay: 0.4s;
 }
 
-.table-container {
+.cards-container {
     animation-delay: 0.6s;
 }
 
@@ -197,16 +197,12 @@ canvas {
     margin: 0 auto;
 }
 
-/* Tableaux */
-.table-container {
+/* Nouveau style pour les cartes d'annonces */
+.cards-container {
     margin-top: 3rem;
-    background: var(--white);
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: var(--shadow-md);
 }
 
-.table-container h2 {
+.section-title {
     font-weight: 700;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
@@ -215,7 +211,7 @@ canvas {
     padding-left: 1rem;
 }
 
-.table-container h2::before {
+.section-title::before {
     content: '';
     position: absolute;
     left: 0;
@@ -226,62 +222,121 @@ canvas {
     border-radius: 2px;
 }
 
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-bottom: 2.5rem;
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
 }
 
-table th,
-table td {
-    padding: 1rem;
-    text-align: left;
-    border: none;
+.data-card {
+    background: var(--white);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    position: relative;
 }
 
-table th {
-    background-color: var(--gray-light);
+.data-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.data-card-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.data-card-body {
+    padding: 1.5rem;
+}
+
+.data-item {
+    display: flex;
+    margin-bottom: 0.75rem;
+    align-items: center;
+}
+
+.data-item:last-child {
+    margin-bottom: 0;
+}
+
+.data-label {
     font-weight: 600;
     color: var(--gray-dark);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
+    min-width: 100px;
+    font-size: 0.9rem;
 }
 
-table th:first-child {
-    border-top-left-radius: 0.5rem;
+.data-value {
+    color: var(--gray-dark);
+    flex-grow: 1;
+    text-align: right;
+    font-size: 0.95rem;
 }
 
-table th:last-child {
-    border-top-right-radius: 0.5rem;
+.data-card-footer {
+    padding: 1rem 1.5rem;
+    background-color: var(--gray-light);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: flex-end;
 }
 
-table tr:nth-child(even) {
-    background-color: rgba(243, 244, 246, 0.5);
-}
-
-table tr {
-    transition: var(--transition);
-}
-
-table tr:hover {
-    background-color: rgba(139, 92, 246, 0.05);
-}
-
-.action-link {
+.view-more {
     color: var(--primary);
     text-decoration: none;
     font-weight: 600;
+    font-size: 0.85rem;
     transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
 }
 
-.action-link:hover {
+.view-more:hover {
     color: var(--primary-light);
     text-decoration: underline;
+}
+
+.view-more svg {
+    margin-left: 0.25rem;
+    width: 16px;
+    height: 16px;
+}
+
+/* Badges pour les états */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-success {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.badge-warning {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+.badge-danger {
+    background-color: #FEE2E2;
+    color: #991B1B;
+}
+
+.badge-info {
+    background-color: #DBEAFE;
+    color: #1E40AF;
 }
 
 /* Responsive */
@@ -300,12 +355,6 @@ table tr:hover {
 
     .stats-container {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
     }
 }
 </style>
@@ -353,92 +402,147 @@ table tr:hover {
         </div>
     </div>
 
-    <!-- Tableaux -->
-    <div class="table-container">
-        <!-- Tableau des Groupements -->
-        <h2>Groupements</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Effectif</th>
-                </tr>
-            </thead>
-            <tbody>
-                @isset($groupements)
+    <!-- Section des cartes de données -->
+    <div class="cards-container">
+        <!-- Cartes des Groupements -->
+        <h2 class="section-title">Groupements</h2>
+        <div class="cards-grid">
+            @isset($groupements)
                 @foreach ($groupements as $groupement)
-                <tr>
-                    <td>{{ $groupement->groupement_id }}</td>
-                    <td>{{ $groupement->nom }}</td>
-                    <td>{{ $groupement->effectif }}</td>
-                </tr>
+                <div class="data-card">
+                    <div class="data-card-header">
+                        {{ $groupement->nom }}
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-item">
+                            <span class="data-label">ID</span>
+                            <span class="data-value">{{ $groupement->groupement_id }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Effectif</span>
+                            <span class="data-value">{{ $groupement->effectif }}</span>
+                        </div>
+                    </div>
+                    <div class="data-card-footer">
+                        <a href="#" class="view-more">
+                            Voir détails
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
                 @endforeach
-                @else
-                <tr>
-                    <td colspan="3" class="text-center">Aucun groupement disponible</td>
-                </tr>
-                @endisset
-            </tbody>
-        </table>
+            @else
+                <div class="data-card">
+                    <div class="data-card-header">
+                        Aucun groupement disponible
+                    </div>
+                    <div class="data-card-body">
+                        <p>Aucun groupement n'a été trouvé dans la base de données.</p>
+                    </div>
+                </div>
+            @endisset
+        </div>
 
-        <!-- Tableau des Appuis -->
-        <h2>Appuis</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                @isset($appuis)
+        <!-- Cartes des Appuis -->
+        <h2 class="section-title">Appuis</h2>
+        <div class="cards-grid">
+            @isset($appuis)
                 @foreach ($appuis as $appui)
-                <tr>
-                    <td>{{ $appui->appuis_id }}</td>
-                    <td>{{ $appui->type_appuis }}</td>
-                    <td>{{ $appui->description }}</td>
-                    <td>{{ $appui->date_appuis }}</td>
-                </tr>
+                <div class="data-card">
+                    <div class="data-card-header">
+                        {{ $appui->type_appuis }}
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-item">
+                            <span class="data-label">ID</span>
+                            <span class="data-value">{{ $appui->appuis_id }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Date</span>
+                            <span class="data-value">{{ $appui->date_appuis }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Description</span>
+                            <span class="data-value">{{ Str::limit($appui->description, 50) }}</span>
+                        </div>
+                    </div>
+                    <div class="data-card-footer">
+                        <a href="#" class="view-more">
+                            Voir détails
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
                 @endforeach
-                @else
-                <tr>
-                    <td colspan="4" class="text-center">Aucun appui disponible</td>
-                </tr>
-                @endisset
-            </tbody>
-        </table>
+            @else
+                <div class="data-card">
+                    <div class="data-card-header">
+                        Aucun appui disponible
+                    </div>
+                    <div class="data-card-body">
+                        <p>Aucun appui n'a été trouvé dans la base de données.</p>
+                    </div>
+                </div>
+            @endisset
+        </div>
 
-        <!-- Tableau des Équipements -->
-        <h2>Équipements</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>État</th>
-                    <th>Quantité</th>
-                </tr>
-            </thead>
-            <tbody>
-                @isset($equipements)
+        <!-- Cartes des Équipements -->
+        <h2 class="section-title">Équipements</h2>
+        <div class="cards-grid">
+            @isset($equipements)
                 @foreach ($equipements as $equipement)
-                <tr>
-                    <td>{{ $equipement->id ?? $equipement->equipment_id }}</td>
-                    <td>{{ $equipement->nom ?? $equipement->equipment_libelle }}</td>
-                    <td>{{ $equipement->etat ?? $equipement->stat_equipement }}</td>
-                    <td>{{ $equipement->quantite ?? 'Non spécifié' }}</td>
-                </tr>
+                <div class="data-card">
+                    <div class="data-card-header">
+                        {{ $equipement->nom ?? $equipement->equipment_libelle }}
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-item">
+                            <span class="data-label">ID</span>
+                            <span class="data-value">{{ $equipement->id ?? $equipement->equipment_id }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Quantité</span>
+                            <span class="data-value">{{ $equipement->quantite ?? 'Non spécifié' }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">État</span>
+                            <span class="data-value">
+                                @php
+                                    $etat = $equipement->etat ?? $equipement->stat_equipement ?? 'inconnu';
+                                    $badgeClass = 'badge-info';
+                                    if (str_contains(strtolower($etat), 'bon')) $badgeClass = 'badge-success';
+                                    if (str_contains(strtolower($etat), 'mauvais')) $badgeClass = 'badge-danger';
+                                    if (str_contains(strtolower($etat), 'usé') || str_contains(strtolower($etat), 'usee')) $badgeClass = 'badge-warning';
+                                @endphp
+                                <span class="badge {{ $badgeClass }}">{{ $etat }}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="data-card-footer">
+                        <a href="#" class="view-more">
+                            Voir détails
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
                 @endforeach
-                @else
-                <tr>
-                    <td colspan="4" class="text-center">Aucun équipement disponible</td>
-                </tr>
-                @endisset
-            </tbody>
-        </table>
+            @else
+                <div class="data-card">
+                    <div class="data-card-header">
+                        Aucun équipement disponible
+                    </div>
+                    <div class="data-card-body">
+                        <p>Aucun équipement n'a été trouvé dans la base de données.</p>
+                    </div>
+                </div>
+            @endisset
+        </div>
     </div>
 </div>
 

@@ -26,7 +26,6 @@
                             </option>
                         @endforeach
                     </select>
-                    <i class='bx bx-chevron-down'></i>
                 </div>
 
                 <div class="select-wrapper">
@@ -38,7 +37,6 @@
                             </option>
                         @endforeach
                     </select>
-                    <i class='bx bx-chevron-down'></i>
                 </div>
 
                 <button type="submit" class="btn-submit">

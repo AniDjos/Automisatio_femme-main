@@ -558,6 +558,33 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const submitButton = document.querySelector('.btn-submit');
+            const form = document.getElementById('multi-step-form');
+
+            submitButton.addEventListener('click', function (event) {
+                // Valider les champs obligatoires avant de soumettre
+                let isValid = true;
+                form.querySelectorAll('[required]').forEach(function (field) {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('error');
+                        field.parentElement.classList.add('error-wrapper');
+                    } else {
+                        field.classList.remove('error');
+                        field.parentElement.classList.remove('error-wrapper');
+                    }
+                });
+
+                if (isValid) {
+                    form.submit(); // Soumettre le formulaire si tout est valide
+                } else {
+                    event.preventDefault(); // Empêcher la soumission si des champs sont invalides
+                    alert('Veuillez remplir tous les champs obligatoires.');
+                }
+            });
+        });
     </script>
 
     <style>
@@ -988,4 +1015,4 @@
             }
         }
     </style>
-@endsection
+@endsection()

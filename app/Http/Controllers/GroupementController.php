@@ -52,61 +52,38 @@ class GroupementController extends Controller
         return view('home.groupement', compact('groupements'));
     }
 
+
     public function index(Request $request)
     {
-        // Récupérer l'utilisateur connecté
-        $user = Auth::user();
-
-        // Vérifier le rôle de l'utilisateur
-        if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
-            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
-        }
-
         $search = $request->input('search');
         $departement = $request->input('departement');
         $commune = $request->input('commune');
         $arrondissement = $request->input('arrondissement');
         $quartier = $request->input('quartier');
 
-        // Construire la requête de recherche
         $query = DB::table('groupement')
             ->join('departement', 'groupement.departement_id', '=', 'departement.departement_id')
             ->leftJoin('commune', 'commune.commune_id', '=', 'groupement.commune')
             ->leftJoin('arrondissement', 'arrondissement.arrondissement_id', '=', 'groupement.arrondissement')
             ->leftJoin('quartier', 'quartier.quartier_id', '=', 'groupement.quartier')
             ->leftJoin('activite as activite_principale', 'activite_principale.activite_id', '=', 'groupement.activite_principale_id')
-            ->leftJoin('activite as activite_secondaire', 'activite_secondaire.activite_id', '=', 'groupement.activite_secondaire_id')
             ->select(
                 'groupement.groupement_id',
                 'groupement.nom as groupement_nom',
                 'groupement.effectif',
-                'groupement.statut',
-                'groupement.rejet',
                 'groupement.date_creation',
+                'groupement.statut',
                 'departement.departement_libelle as departement_nom',
                 'commune.commune_libelle as commune_nom',
                 'arrondissement.arrondissement_libelle as arrondissement_nom',
                 'quartier.quartier_libelle as quartier_nom',
-                'activite_principale.activite as activite_principale_nom',
-                'activite_secondaire.activite as activite_secondaire_nom'
+                'activite_principale.activite as activite_principale_nom'
             );
 
-        // Appliquer la recherche si un terme est fourni
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('groupement.nom', 'like', "%$search%")
-                    ->orWhere('departement.departement_libelle', 'like', "%$search%")
-                    ->orWhere('commune.commune_libelle', 'like', "%$search%")
-                    ->orWhere('arrondissement.arrondissement_libelle', 'like', "%$search%")
-                    ->orWhere('quartier.quartier_libelle', 'like', "%$search%")
-                    ->orWhere('activite_principale.activite', 'like', "%$search%")
-                    ->orWhere('activite_secondaire.activite', 'like', "%$search%")
-                    ->orWhere('groupement.effectif', '=', $search)
-                    ->orWhere('groupement.statut', '=', $search);
-            });
+            $query->where('groupement.nom', 'like', "%$search%");
         }
 
-        // Appliquer les filtres par localisation
         if ($departement) {
             $query->where('groupement.departement_id', $departement);
         }
@@ -123,16 +100,18 @@ class GroupementController extends Controller
             $query->where('groupement.quartier', $quartier);
         }
 
-        // Pagination des résultats
-        $groupements = $query->orderBy('groupement_id', 'desc')->paginate(3);
+        // Si la requête est AJAX, retourner les résultats au format JSON
+        if ($request->ajax()) {
+            return response()->json($query->get());
+        }
 
-        // Récupérer les données pour les champs de sélection
+        // Sinon, retourner la vue avec les données paginées
+        $groupements = $query->paginate(10);
         $departements = Departement::all();
         $communes = Commune::all();
         $arrondissements = Arrondissement::all();
         $quartiers = Quartier::all();
 
-        // Retourner la vue avec les données
         return view('groupements.index', compact('groupements', 'departements', 'communes', 'arrondissements', 'quartiers'));
     }
 
@@ -179,7 +158,7 @@ class GroupementController extends Controller
             'activite_secondaire' => 'nullable|integer|exists:activite,activite_id',
             'filiere' => 'integer|exists:filiere,filiere_id',
             'date_creation' => 'date',
-            'source_financement' => 'nullable|string|max:255',
+            'source_financement' => 'string|max:255',
 
             // Appui (conditionnel)
             'type_appui' => 'required_if:appui,true|nullable|string|in:financier,materiel',
@@ -234,7 +213,7 @@ class GroupementController extends Controller
                     'date_appuis' => $validatedData['annee_appui'] ?? null,
                     'users_id' => Auth::id(),
                     'appui_masm' => $request->has('appui_masm') ? true : false,
-                    
+
                 ]);
             }
 
@@ -254,7 +233,7 @@ class GroupementController extends Controller
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $file->move(public_path('agrements'), $filename);
             }
-            $filename = null; 
+            $filename = null;
             // Création de l'agrément
             Agrement::create([
                 'groupement_id' => $groupement->groupement_id,
@@ -624,5 +603,27 @@ class GroupementController extends Controller
         session()->flash('notification', 'Le groupement a été rejeté avec succès.');
 
         return redirect()->route('groupements.index');
+    }
+
+    public function destroy($id)
+    {
+        try {
+            // Récupérer le groupement par son ID
+            $groupement = Groupement::findOrFail($id);
+
+            // Supprimer les relations associées (si nécessaire)
+            Appuis::where('groupement_id', $id)->delete();
+            Equipement::where('groupement_id', $id)->delete();
+            Agrement::where('groupement_id', $id)->delete();
+
+            // Supprimer le groupement
+            $groupement->delete();
+
+            // Retourner un message de succès
+            return redirect()->route('groupements.index')->with('success', 'Groupement supprimé avec succès.');
+        } catch (\Exception $e) {
+            // Gérer les erreurs et retourner un message d'erreur
+            return redirect()->route('groupements.index')->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+        }
     }
 }

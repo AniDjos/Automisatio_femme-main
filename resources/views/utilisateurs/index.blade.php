@@ -13,6 +13,7 @@
             <i class="fas fa-plus"></i> Ajouter un Utilisateur
         </a>
         
+        <!-- Champ de recherche -->
         <div class="form-group">
             <input type="text" id="search" name="search" value="{{ request('search') }}"
                 placeholder="Rechercher un nom..." class="form-control">
@@ -455,6 +456,7 @@
         const table = document.getElementById('utilisateursTable');
         const rows = table.querySelectorAll('tbody tr');
 
+        // Recherche dynamique
         searchInput.addEventListener('input', function () {
             const searchValue = searchInput.value.toLowerCase();
 
@@ -462,12 +464,30 @@
                 const nom = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
                 const prenom = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
 
+                // Afficher ou masquer les lignes en fonction de la recherche
                 if (nom.includes(searchValue) || prenom.includes(searchValue)) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
                 }
             });
+
+            // Vérifier si aucune ligne n'est visible
+            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+            const noDataMessage = document.querySelector('.no-data');
+
+            if (visibleRows.length === 0) {
+                if (!noDataMessage) {
+                    const noDataRow = document.createElement('tr');
+                    noDataRow.classList.add('no-data');
+                    noDataRow.innerHTML = `<td colspan="7" class="no-data">Aucun utilisateur trouvé.</td>`;
+                    table.querySelector('tbody').appendChild(noDataRow);
+                }
+            } else {
+                if (noDataMessage) {
+                    noDataMessage.remove();
+                }
+            }
         });
         
         // Animation des badges

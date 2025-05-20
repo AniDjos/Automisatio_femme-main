@@ -1389,7 +1389,7 @@
                                     <img src="{{ asset('images/' . Auth::user()->profile_photo) }}" alt="Profile">
                                 </div>
                                 <div class="profile-info">
-                                    <p class="profile-name">{{ Auth::user()->name }}</p>
+                                    <p class="profile-name">{{ Auth::user()->nom . ' ' . Auth::user()->prenom }}</p>
                                     <p class="profile-role">{{ Auth::user()->role ?? 'Utilisateur' }}</p>
                                 </div>
                                 <svg class="menu-icon" id="profile-chevron" viewBox="0 0 24 24" fill="none"

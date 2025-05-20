@@ -19,37 +19,41 @@ class AgrementController extends Controller
         $user = Auth::user();
         $search = $request->input('search');
 
-        // Construire la requête de base
+        // Construire la requête de base avec jointure sur la table `structure`
         $query = DB::table('agrement')
             ->join('groupement', 'agrement.groupement_id', '=', 'groupement.groupement_id')
+            ->join('structure', 'agrement.structure', '=', 'structure.structure_id') // Jointure avec la table `structure`
             ->select(
                 'agrement.agrement_id',
                 'agrement.reference',
                 'agrement.document',
-                'agrement.structure',
+                'structure.structure as structure_nom', // Récupérer le nom de la structure
                 'agrement.date_deliver',
                 'groupement.nom as groupement_nom'
             );
 
         // Vérifier le rôle de l'utilisateur
         if ($user->role !== 'admin' && $user->role !== 'gestionnaire du ministere') {
-            // Si l'utilisateur n'est pas admin ou gestionnaire, fi
-            redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+            return redirect()->route('login')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
 
         // Appliquer la recherche si un terme est fourni
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('agrement.reference', 'like', "%$search%")
-                    ->orWhere('groupement.nom', 'like', "%$search%");
+                    ->orWhere('groupement.nom', 'like', "%$search%")
+                    ->orWhere('structure.structure', 'like', "%$search%"); // Recherche sur le nom de la structure
             });
         }
 
         // Récupérer les agréments avec pagination
         $agrements = $query->orderBy('agrement.agrement_id', 'desc')->paginate(6);
+
+        // Récupérer les groupements pour le formulaire de création/édition
         $groupements = Groupement::all();
+
         // Retourner la vue avec les agréments
-        return view('agrements.index', compact('agrements','groupements'));
+        return view('agrements.index', compact('agrements', 'groupements'));
     }
 
     public function create()

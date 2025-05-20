@@ -45,7 +45,7 @@
                     @forelse($agrements as $agrement)
                         <tr>
                             <td><span class="badge">#{{ $agrement->agrement_id }}</span></td>
-                            <td>{{ $agrement->structure }}</td>
+                            <td>{{ $agrement->structure_nom }}</td>
                             <td>{{ $agrement->reference }}</td>
                             <td>
                                 <a href="{{ asset('agrements/' . $agrement->document) }}" target="_blank" class="btn-document">
@@ -418,18 +418,38 @@ document.addEventListener('DOMContentLoaded', function () {
     function filterTable() {
         const searchValue = searchInput.value.toLowerCase();
         const groupementValue = groupementFilter.value.toLowerCase();
+        let hasVisibleRows = false;
 
         rows.forEach(row => {
             const cells = row.querySelectorAll('td');
             const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
             const groupementText = row.querySelector('.groupement-column').textContent.toLowerCase();
 
+            // Vérifier si la ligne correspond aux critères de recherche et de filtre
             if (rowText.includes(searchValue) && (groupementValue === '' || groupementText.includes(groupementValue))) {
                 row.style.display = ''; // Affiche la ligne
+                hasVisibleRows = true; // Indique qu'au moins une ligne est visible
             } else {
                 row.style.display = 'none'; // Masque la ligne
             }
         });
+
+        // Afficher ou masquer le message "Aucun agrément trouvé"
+        const noDataMessage = document.querySelector('.no-data');
+        if (!hasVisibleRows) {
+            if (!noDataMessage) {
+                const noDataRow = document.createElement('tr');
+                noDataRow.classList.add('no-data');
+                noDataRow.innerHTML = `<td colspan="7" class="no-data">
+                    <i class='bx bx-info-circle'></i> Aucun agrément trouvé
+                </td>`;
+                table.querySelector('tbody').appendChild(noDataRow);
+            }
+        } else {
+            if (noDataMessage) {
+                noDataMessage.remove();
+            }
+        }
     }
 
     // Écouteurs d'événements pour la recherche et le filtre
