@@ -127,11 +127,13 @@
                         <p class="info-item" data-tooltip="État actuel du groupement">
                             <i class="fas fa-user"></i> 
                             <span>Etat:
-                                @if ($groupement->statut)
-                                    <span class="badge badge-success">Activé</span>
-                                @else
-                                    <span class="badge badge-danger">Désactivé</span>
-                                @endif
+                            @if ($groupement->rejet)
+            <span class="badge badge-danger">Rejeté</span>
+        @elseif ($groupement->statut)
+            <span class="badge badge-success">Activé</span>
+        @else
+            <span class="badge badge-warning">Désactivé</span>
+        @endif
                             </span>
                         </p>
                     </div>
@@ -727,6 +729,12 @@
             background-color: rgba(239, 68, 68, 0.15);
             color: var(--danger);
             border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
         }
 
         /* Info */

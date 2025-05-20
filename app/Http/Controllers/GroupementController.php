@@ -73,6 +73,7 @@ class GroupementController extends Controller
                 'groupement.effectif',
                 'groupement.date_creation',
                 'groupement.statut',
+                'groupement.rejet',
                 'departement.departement_libelle as departement_nom',
                 'commune.commune_libelle as commune_nom',
                 'arrondissement.arrondissement_libelle as arrondissement_nom',

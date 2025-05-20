@@ -424,7 +424,7 @@ canvas {
                         </div>
                     </div>
                     <div class="data-card-footer">
-                        <a href="#" class="view-more">
+                        <a href="{{ route('groupements.index')}}" class="view-more">
                             Voir détails
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -469,7 +469,7 @@ canvas {
                         </div>
                     </div>
                     <div class="data-card-footer">
-                        <a href="#" class="view-more">
+                        <a href="{{ route('appuis.index') }}" class="view-more">
                             Voir détails
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -505,8 +505,8 @@ canvas {
                             <span class="data-value">{{ $equipement->id ?? $equipement->equipment_id }}</span>
                         </div>
                         <div class="data-item">
-                            <span class="data-label">Quantité</span>
-                            <span class="data-value">{{ $equipement->quantite ?? 'Non spécifié' }}</span>
+                            <span class="data-label">Nom equipement</span>
+                            <span class="data-value">{{ $equipement->equipment_libelle ?? 'Non spécifié' }}</span>
                         </div>
                         <div class="data-item">
                             <span class="data-label">État</span>
@@ -523,7 +523,7 @@ canvas {
                         </div>
                     </div>
                     <div class="data-card-footer">
-                        <a href="#" class="view-more">
+                        <a href="{{ route('equipement.index') }}" class="view-more">
                             Voir détails
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
